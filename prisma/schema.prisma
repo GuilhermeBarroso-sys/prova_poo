@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./bd_epi.db"
+}
+
+model Employee {
+  id                      String @id @default(uuid())
+  name                    String
+  cpf                     String
+  role                    String
+  @@map("employees")
+  EPI_delivery EPI_delivery[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+
+}
+
+model Epi {
+  id                      String @id @default(uuid())
+  name                    String
+  validate                String
+  number                  Int
+  @@map("epi")
+  EPI_delivery EPI_delivery[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+}
+
+model EPI_delivery {
+  id                       String   @id @default(uuid())
+  employee                 Employee @relation(fields: [employee_id], references: [id])
+  employee_id              String
+  epi                      Epi      @relation(fields: [epi_id], references: [id])       
+  epi_id                   String 
+  delivery_date            DateTime
+  amount_delivered         Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+}
+
+
+
+// model Message {
+//   id         String   @id @default(uuid())
+//   text       String
+//   created_at DateTime @default(now())
+
+//   user   User   @relation(fields: [user_id], references: [id])
+//   user_id String
+//   @@map("messages")
+// }
